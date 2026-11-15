@@ -113,4 +113,13 @@ const controls=['level','otherLevel','specialty','topic','scope','duration','poi
 function serialize(){const form={};controls.forEach(id=>form[id]=checkIds.has(id)?$(id).checked:$(id).value);return {kind:'SEQ_Prompt_Builder',version:2,form,items:structuredClone(items)}}
 function hydrate(data){if(!data||!Array.isArray(data.items)||!data.items.length||data.items.length>30)throw Error('Invalid SEQ blueprint');items=data.items.map(q=>({type:TYPES.includes(q.type)?q.type:TYPES[13],noExtra:typeof q.noExtra==='boolean'?q.noExtra:!String(q.stem||'').trim(),extraStem:String(q.extraStem??q.stem??''),task:String(q.task||''),points:String(q.points??''),time:String(q.time??'')}));controls.forEach(id=>{if(data.form&&Object.hasOwn(data.form,id)){if(checkIds.has(id))$(id).checked=Boolean(data.form[id]);else $(id).value=String(data.form[id])}});render()}
 $('addQuestion').onclick=()=>{if(items.length<30){items.push({type:TYPES[0],noExtra:true,extraStem:'',task:'',points:'',time:''});render()}};$('copy').onclick=copy;$('download').onclick=()=>download(latest,'SEQ_Prompt.txt','text/plain;charset=utf-8');$('save').onclick=()=>{download(JSON.stringify(serialize(),null,2),'SEQ_Blueprint.json','application/json');notify('บันทึก Blueprint แล้ว')};$('load').onclick=()=>$('loadFile').click();$('loadFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{hydrate(JSON.parse(await file.text()));notify('เปิด Blueprint แล้ว')}catch(err){notify('เปิดไฟล์ไม่ได้: '+err.message)}e.target.value=''};$('duplicate').onclick=()=>{download(JSON.stringify(serialize(),null,2),'SEQ_Blueprint_copy.json','application/json');notify('บันทึกสำเนาแล้ว')};$('reset').onclick=()=>{if(confirm('ล้างข้อมูลและเริ่มข้อสอบใหม่?'))location.reload()};controls.forEach(id=>$(id).addEventListener('input',update));render();
-</script></body></html>
+</script>
+
+<!-- GoatCounter Analytics -->
+<script
+  data-goatcounter="https://pattharawin.goatcounter.com/count"
+  async
+  src="https://gc.zgo.at/count.js">
+</script>
+
+</body></html>
